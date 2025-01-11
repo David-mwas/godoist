@@ -27,9 +27,11 @@ func main() {
 
 	fmt.Println("Hello World")
 
-	err := godotenv.Load(".env")
-	if err != nil {
-		log.Fatal("Error loading .env file")
+	if os.Getenv("ENV") != "production" {
+		err := godotenv.Load(".env")
+		if err != nil {
+			log.Fatal("Error loading .env file")
+		}
 	}
 
 	// Connect to MongoDB
@@ -55,10 +57,12 @@ func main() {
 	app := fiber.New()
 
 	// cors middleware
-	app.Use(cors.New(cors.Config{
-		AllowOrigins: "http://localhost:5173/",
-		AllowHeaders: "Origin,Content-Type,Accept",
-	}))
+	if os.Getenv("ENV") != "production" {
+		app.Use(cors.New(cors.Config{
+			AllowOrigins: "http://localhost:5173/",
+			AllowHeaders: "Origin,Content-Type,Accept",
+		}))
+	}
 
 	app.Get("/", func(c *fiber.Ctx) error {
 		return c.SendString("Hello, World!")
@@ -73,6 +77,9 @@ func main() {
 	PORT := os.Getenv("PORT")
 	if PORT == "" {
 		PORT = "5000"
+	}
+	if os.Getenv("ENV") == "production" {
+		app.Static("/", "./client/dist")
 	}
 
 	log.Fatal(app.Listen(":" + PORT))
