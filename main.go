@@ -38,8 +38,10 @@ func main() {
 		log.Fatal(err)
 	}
 
+	// disconnect db
 	defer client.Disconnect(context.Background())
 
+	// text db connection
 	err = client.Ping(context.Background(), nil)
 	if err != nil {
 		log.Fatal(err)
