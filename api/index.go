@@ -55,7 +55,7 @@ func handler() http.Handler {
 
 	// cors middleware
 	app.Use(cors.New(cors.Config{
-		AllowOrigins: "http://localhost:5173/",
+		AllowOrigins: os.Getenv("ALLOWED_ORIGINS"),
 		AllowHeaders: "Origin,Content-Type,Accept",
 	}))
 	// Route for fetching all todos
