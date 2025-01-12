@@ -31,6 +31,9 @@ func init() {
 		log.Fatalf("Failed to connect to MongoDB: %v", err)
 	}
 
+	// disconnect db
+	defer client.Disconnect(context.Background())
+
 	collection = client.Database(os.Getenv("MONGODB_DB")).Collection("todos")
 }
 
@@ -44,6 +47,10 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 // Building the Fiber application
 func handler() http.Handler {
 	app := fiber.New()
+
+	app.Get("/", func(c *fiber.Ctx) error {
+		return c.SendString("Hello, World!")
+	})
 
 	// Route for fetching all todos
 	app.Get("/api/todo", func(c *fiber.Ctx) error {
@@ -117,6 +124,10 @@ func handler() http.Handler {
 		}
 		return c.Status(200).JSON(fiber.Map{"success": true})
 	})
+
+	if os.Getenv("ENV") == "production" {
+		app.Static("/", "./client/dist")
+	}
 
 	return adaptor.FiberApp(app)
 }
