@@ -48,9 +48,9 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 func handler() http.Handler {
 	app := fiber.New()
 
-	app.Get("/", func(c *fiber.Ctx) error {
-		return c.SendString("Hello, World!")
-	})
+	// app.Get("/", func(c *fiber.Ctx) error {
+	// 	return c.SendString("Hello, World!")
+	// })
 
 	// Route for fetching all todos
 	app.Get("/api/todo", func(c *fiber.Ctx) error {
