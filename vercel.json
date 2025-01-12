@@ -1,5 +1,22 @@
 {
-  "github": {
-    "silent": true
+  "version": 2,
+  "builds": [
+    {
+      "src": "main.go",
+      "use": "@vercel/go"
+    },
+    {
+      "src": "client/dist/**",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    { "src": "/api/.*", "dest": "main.go" },
+    { "src": "/(.*)", "dest": "client/dist/$1" }
+  ],
+  "env": {
+    "MONGODB_URI": "@mongodb_uri",
+    "MONGODB_DB": "@mongodb_db",
+    "ENV": "production"
   }
 }
