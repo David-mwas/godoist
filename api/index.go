@@ -51,11 +51,11 @@ func handler() http.Handler {
 	// Serve static files from the Vite build (dist folder) in production
 	if os.Getenv("ENV") == "production" {
 		// Serve all the static files in the dist folder
-		app.Static("/", "./client/dist")
+		app.Static("/", "../client/dist")
 
 		// Catch-all route for client-side routing
 		app.All("*", func(c *fiber.Ctx) error {
-			return c.SendFile("./client/dist/index.html")
+			return c.SendFile("../client/dist/index.html")
 		})
 	}
 
