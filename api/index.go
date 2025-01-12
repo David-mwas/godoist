@@ -48,7 +48,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 func handler() http.Handler {
 	app := fiber.New()
 
-	// Serve static files from the Vite build (dist folder) in production
+	// Serve static files from the Vite build (dist folder)
 	if os.Getenv("ENV") == "production" {
 		// Serve all the static files in the dist folder
 		app.Static("/", "./client/dist")
