@@ -8,6 +8,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/adaptor"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -52,6 +53,11 @@ func handler() http.Handler {
 		return c.SendString("Hello, World!")
 	})
 
+	// cors middleware
+	app.Use(cors.New(cors.Config{
+		AllowOrigins: "http://localhost:5173/",
+		AllowHeaders: "Origin,Content-Type,Accept",
+	}))
 	// Route for fetching all todos
 	app.Get("/api/todo", func(c *fiber.Ctx) error {
 		todos := []map[string]interface{}{}
