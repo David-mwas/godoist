@@ -54,7 +54,7 @@ func handler() http.Handler {
 		app.Static("/", "./client/dist")
 
 		// Catch-all route for client-side routing
-		app.All("*", func(c *fiber.Ctx) error {
+		app.Get("/", func(c *fiber.Ctx) error {
 			return c.SendFile("./client/dist/index.html")
 		})
 	}
