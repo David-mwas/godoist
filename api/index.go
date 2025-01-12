@@ -48,9 +48,16 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 func handler() http.Handler {
 	app := fiber.New()
 
-	// app.Get("/", func(c *fiber.Ctx) error {
-	// 	return c.SendString("Hello, World!")
-	// })
+	// Serve static files from the Vite build (dist folder) in production
+	if os.Getenv("ENV") == "production" {
+		// Serve all the static files in the dist folder
+		app.Static("/", "./client/dist")
+
+		// Catch-all route for client-side routing
+		app.All("*", func(c *fiber.Ctx) error {
+			return c.SendFile("./client/dist/index.html")
+		})
+	}
 
 	// Route for fetching all todos
 	app.Get("/api/todo", func(c *fiber.Ctx) error {
@@ -124,10 +131,6 @@ func handler() http.Handler {
 		}
 		return c.Status(200).JSON(fiber.Map{"success": true})
 	})
-
-	if os.Getenv("ENV") == "production" {
-		app.Static("/", "./client/dist")
-	}
 
 	return adaptor.FiberApp(app)
 }
