@@ -32,7 +32,7 @@ func init() {
 	}
 
 	// disconnect db
-	defer client.Disconnect(context.Background())
+	// defer client.Disconnect(context.Background())
 
 	collection = client.Database(os.Getenv("MONGODB_DB")).Collection("todos")
 }
