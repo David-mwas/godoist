@@ -1,4 +1,5 @@
 package handler
+
 import (
 	"context"
 
@@ -17,7 +18,7 @@ type Todo struct {
 
 var collection *mongo.Collection
 
-func GetTodos(c *fiber.Ctx) error {
+func Gettodos(c *fiber.Ctx) error {
 	todos := []Todo{}
 	cursor, err := collection.Find(context.Background(), bson.M{})
 	if err != nil {
