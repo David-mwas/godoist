@@ -2,12 +2,14 @@ package handler
 
 import (
 	"context"
+	"encoding/json"
 
-	"github.com/gofiber/fiber/v2"
+	"net/http"
 
 	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
+
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type Todo struct {
@@ -18,27 +20,27 @@ type Todo struct {
 
 var collection *mongo.Collection
 
-func Gettodos(c *fiber.Ctx) error {
+func GetTodos(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
 	todos := []Todo{}
 	cursor, err := collection.Find(context.Background(), bson.M{})
 	if err != nil {
-		return c.Status(500).JSON(fiber.Map{
-			"error": err.Error(),
-		})
+		http.Error(w, `{"error": "`+err.Error()+`"}`, http.StatusInternalServerError)
+		return
 	}
-
 	defer cursor.Close(context.Background())
+
 	for cursor.Next(context.Background()) {
 		var todo Todo
 		if err := cursor.Decode(&todo); err != nil {
-			return c.Status(500).JSON(fiber.Map{
-				"error": err.Error(),
-			})
+			http.Error(w, `{"error": "`+err.Error()+`"}`, http.StatusInternalServerError)
+			return
 		}
-
 		todos = append(todos, todo)
-
 	}
-	return c.JSON(todos)
 
+	if err := json.NewEncoder(w).Encode(todos); err != nil {
+		http.Error(w, `{"error": "`+err.Error()+`"}`, http.StatusInternalServerError)
+	}
 }
