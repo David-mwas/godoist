@@ -17,7 +17,7 @@ import (
 
 var collection *mongo.Collection
 
-// Declare the Todo struct as you did in the original code
+// Declare the Todo struct
 type Todo struct {
 	ID        primitive.ObjectID `json:"_id,omitempty" bson:"_id,omitempty"`
 	Completed bool               `json:"completed"`
